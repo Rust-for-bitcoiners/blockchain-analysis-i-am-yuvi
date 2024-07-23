@@ -1,6 +1,6 @@
 use std::{env, time};
 
-use bitcoin::Block;
+use bitcoin::{Block, Transaction};
 use bitcoincore_rpc::{
     json,
     jsonrpc::{self, serde_json::error},
@@ -48,8 +48,11 @@ fn get_block_dat(rpc_client: &Client, block_height: u64) -> Result<Block, Error>
 
 // TODO: Task 2
 fn number_of_transactions(block_height: u64) -> u16 {
-    let some_value = Box::new(4 as u32);
-    todo!()
+    let rpc_client: &Client = &*RPC_CLIENT;
+    let block: Block = get_block_dat(rpc_client, block_height).unwrap();
+
+    let tx_data: Vec<Transaction> = block.txdata;
+    tx_data.len() as u16
 }
 
 fn main() {
@@ -78,4 +81,11 @@ fn main() {
 
     //Display time to mine the block
     println!("Time to mine block {} and {}: {}", 15, 16, time_to_mine(15));
+
+    //Display the no. of transactions in a block
+    println!(
+        "Totao no. of transactions in block {}: {}",
+        15,
+        number_of_transactions(15)
+    );
 }
